@@ -141,6 +141,7 @@ static bool asar_init_shared(void)
 	load(getlabelval);
 	load(getdefine);
 	load(getalldefines);
+	load(resolvedefines);
 	load(math);
 	load(getwrittenblocks);
 	load(getmapper);

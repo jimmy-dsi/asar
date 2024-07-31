@@ -19,7 +19,7 @@ asar_error_id openromerror;
 autoarray<writtenblockdata> writtenblocks;
 
 // RPG Hacker: Uses binary search to find the insert position of our ROM write
-#ifdef ASAR_SHARED
+#if defined(ASAR_SHARED) || defined(ASAR_STATIC)
 static int findromwritepos(int snesoffset, int searchstartpos, int searchendpos)
 {
 	if (searchendpos == searchstartpos)
@@ -40,6 +40,7 @@ static int findromwritepos(int snesoffset, int searchstartpos, int searchendpos)
 
 static void addromwriteforbank(int snesoffset, int numbytes)
 {
+	if (numbytes == 0) return;
 	int currentbank = (snesoffset & 0xFF0000);
 
 	int insertpos = findromwritepos(snesoffset, 0, writtenblocks.count);
@@ -110,7 +111,7 @@ static void addromwrite(int pcoffset, int numbytes)
 void writeromdata(int pcoffset, const void * indata, int numbytes)
 {
 	memcpy(const_cast<unsigned char*>(romdata) + pcoffset, indata, (size_t)numbytes);
-	#ifdef ASAR_SHARED
+	#if defined(ASAR_SHARED) || defined(ASAR_STATIC)
 		addromwrite(pcoffset, numbytes);
 	#endif
 }
@@ -118,7 +119,7 @@ void writeromdata(int pcoffset, const void * indata, int numbytes)
 void writeromdata_byte(int pcoffset, unsigned char indata)
 {
 	memcpy(const_cast<unsigned char*>(romdata) + pcoffset, &indata, 1);
-	#ifdef ASAR_SHARED
+	#if defined(ASAR_SHARED) || defined(ASAR_STATIC)
 		addromwrite(pcoffset, 1);
 	#endif
 }
@@ -126,7 +127,7 @@ void writeromdata_byte(int pcoffset, unsigned char indata)
 void writeromdata_bytes(int pcoffset, unsigned char indata, int numbytes, bool add_write)
 {
 	memset(const_cast<unsigned char*>(romdata) + pcoffset, indata, (size_t)numbytes);
-	#ifdef ASAR_SHARED
+	#if defined(ASAR_SHARED) || defined(ASAR_STATIC)
 		if(add_write)
 			addromwrite(pcoffset, numbytes);
 	#endif
