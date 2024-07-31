@@ -40,6 +40,7 @@ static int findromwritepos(int snesoffset, int searchstartpos, int searchendpos)
 
 static void addromwriteforbank(int snesoffset, int numbytes)
 {
+	if (numbytes == 0) return;
 	int currentbank = (snesoffset & 0xFF0000);
 
 	int insertpos = findromwritepos(snesoffset, 0, writtenblocks.count);
